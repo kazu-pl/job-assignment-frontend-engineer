@@ -9,20 +9,22 @@ import Logout from "./Logout";
 import Profile from "./Profile";
 import Settings from "./Settings";
 
-function App() {
+import APP_PATHS from "constants/appPaths";
+
+function App(): JSX.Element {
   return (
     <Router>
       <Switch>
-        <Route path="/editor" exact component={Editor} />
-        <Route path="/editor/:slug" exact component={Editor} />
-        <Route path="/login" exact component={LoginRegister} />
-        <Route path="/logout" exact component={Logout} />
-        <Route path="/profile/:username" exact component={Profile} />
-        <Route path="/profile/:username/favorites" exact component={Profile} />
-        <Route path="/register" exact component={LoginRegister} />
-        <Route path="/settings" exact component={Settings} />
-        <Route path="/:slug" exact component={Article} />
-        <Route path="/" component={ArticleList} />
+        <Route path={APP_PATHS.EDITOR_LIST} exact component={Editor} />
+        <Route path={APP_PATHS.EDITOR_SINGLE(":slug")} exact component={Editor} />
+        <Route path={APP_PATHS.LOGIN} exact component={LoginRegister} />
+        <Route path={APP_PATHS.LOGOUT} exact component={Logout} />
+        <Route path={APP_PATHS.PROFILE_SINGLE(":username")} exact component={Profile} />
+        <Route path={APP_PATHS.PROFILE_SINGLE_FAV(":username")} exact component={Profile} />
+        <Route path={APP_PATHS.REGISTER} exact component={LoginRegister} />
+        <Route path={APP_PATHS.SETTINGS} exact component={Settings} />
+        <Route path={APP_PATHS.ARTICLE_SINGLE(":slug")} exact component={Article} />
+        <Route path={APP_PATHS.ARTICLE_LIST} component={ArticleList} />
       </Switch>
     </Router>
   );

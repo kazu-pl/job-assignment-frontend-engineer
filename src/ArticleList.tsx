@@ -1,4 +1,14 @@
+import { useEffect } from "react";
+import { fetchArticles } from "features/articles/store/articlesSlice";
+import { useAppDispatch } from "store/hooks";
+
 export default function ArticleList() {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(fetchArticles());
+  }, [dispatch]);
+
   return (
     <>
       <nav className="navbar navbar-light">

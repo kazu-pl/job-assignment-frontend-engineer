@@ -14,7 +14,8 @@
     "lint": "eslint --ext .ts,.tsx src",
     "prepare": "husky install",
     "start": "react-scripts start",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "generateTypes": "npx swagger-typescript-api -p ./docs/schema/swagger.json -o ./src/types -n conduit-api.types.ts"
   },
   "dependencies": {
     "@types/jest": "27.0.2",
@@ -42,7 +43,8 @@
     "eslint-plugin-react-hooks": "4.2.0",
     "husky": "7.0.2",
     "lint-staged": "11.2.3",
-    "prettier": "2.4.1"
+    "prettier": "2.4.1",
+    "swagger-typescript-api": "^9.3.1"
   },
   "browserslist": {
     "production": [

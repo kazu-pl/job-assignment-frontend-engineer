@@ -1,38 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-import { API_URL } from "constants/env";
+import axiosInstance from "libs/axios/axiosInstance";
 import { RootState } from "store";
 import { MultipleArticlesResponse, SingleArticleResponse } from "types/conduit-api.types";
 
 export interface ArticlesState {
   articlesList: {
     data: MultipleArticlesResponse | null;
-    isFetching: boolean;
+    isLoading: boolean;
   };
   singleArticle: {
     data: SingleArticleResponse | null;
-    isFetching: boolean;
+    isLoading: boolean;
   };
 }
 
 const initialState: ArticlesState = {
   articlesList: {
     data: null,
-    isFetching: true,
+    isLoading: true,
   },
   singleArticle: {
     data: null,
-    isFetching: true,
+    isLoading: true,
   },
 };
 
 export const fetchArticlesList = createAsyncThunk("articles/fetchArticlesList", async () => {
-  const response = await axios.get<MultipleArticlesResponse>(`${API_URL}/articles`);
+  const response = await axiosInstance.get<MultipleArticlesResponse>(`/articles`);
   return response.data;
 });
 
 export const fetchSingleArticle = createAsyncThunk("articles/fetchSingleArticle", async (slug: string) => {
-  const response = await axios.get<SingleArticleResponse>(`${API_URL}/articles/${slug}`);
+  const response = await axiosInstance.get<SingleArticleResponse>(`/articles/${slug}`);
   return response.data;
 });
 
@@ -42,25 +41,25 @@ export const counterSlice = createSlice({
   reducers: {},
   extraReducers: builder => {
     builder.addCase(fetchArticlesList.pending, state => {
-      state.articlesList.isFetching = true;
+      state.articlesList.isLoading = true;
     });
     builder.addCase(fetchArticlesList.fulfilled, (state, action) => {
-      state.articlesList.isFetching = false;
+      state.articlesList.isLoading = false;
       state.articlesList.data = action.payload;
     });
     builder.addCase(fetchArticlesList.rejected, state => {
-      state.articlesList.isFetching = false;
+      state.articlesList.isLoading = false;
     });
     // -----------------
     builder.addCase(fetchSingleArticle.pending, state => {
-      state.singleArticle.isFetching = true;
+      state.singleArticle.isLoading = true;
     });
     builder.addCase(fetchSingleArticle.fulfilled, (state, action) => {
-      state.singleArticle.isFetching = false;
+      state.singleArticle.isLoading = false;
       state.singleArticle.data = action.payload;
     });
     builder.addCase(fetchSingleArticle.rejected, state => {
-      state.singleArticle.isFetching = false;
+      state.singleArticle.isLoading = false;
     });
   },
 });

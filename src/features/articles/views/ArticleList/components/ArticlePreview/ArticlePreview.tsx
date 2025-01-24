@@ -1,7 +1,7 @@
 import APP_PATHS from "constants/appPaths";
 import { Link } from "react-router-dom";
 import { Article } from "types/conduit-api.types";
-import AuthorImage from "../AuthorImage";
+import AuthorImage from "../../../../components/AuthorImage";
 
 export interface ArticlePreviewProps {
   article: Article;

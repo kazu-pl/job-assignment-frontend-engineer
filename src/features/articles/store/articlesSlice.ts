@@ -1,19 +1,24 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { API_URL } from "constants/env";
+import { RootState } from "store";
 import { MultipleArticlesResponse } from "types/conduit-api.types";
 
-export interface CounterState {
-  data: MultipleArticlesResponse | null;
-  isFetching: boolean;
+export interface ArticlesState {
+  articlesList: {
+    data: MultipleArticlesResponse | null;
+    isFetching: boolean;
+  };
 }
 
-const initialState: CounterState = {
-  data: null,
-  isFetching: true,
+const initialState: ArticlesState = {
+  articlesList: {
+    data: null,
+    isFetching: true,
+  },
 };
 
-export const fetchArticles = createAsyncThunk("counter/fetchArticles", async () => {
+export const fetchArticlesList = createAsyncThunk("articles/fetchArticlesList", async () => {
   const response = await axios.get<MultipleArticlesResponse>(`${API_URL}/articles`);
   return response.data;
 });
@@ -21,32 +26,21 @@ export const fetchArticles = createAsyncThunk("counter/fetchArticles", async () 
 export const counterSlice = createSlice({
   name: "counter",
   initialState,
-  reducers: {
-    // increment: state => {
-    //   // Redux Toolkit allows us to write "mutating" logic in reducers. It
-    //   // doesn't actually mutate the state because it uses the Immer library,
-    //   // which detects changes to a "draft state" and produces a brand new
-    //   // immutable state based off those changes
-    //   state.value += 1;
-    // },
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload;
-    // },
-  },
+  reducers: {},
   extraReducers: builder => {
-    builder.addCase(fetchArticles.pending, state => {
-      state.isFetching = true;
+    builder.addCase(fetchArticlesList.pending, state => {
+      state.articlesList.isFetching = true;
     });
-    builder.addCase(fetchArticles.fulfilled, (state, action) => {
-      state.isFetching = false;
-      state.data = action.payload;
+    builder.addCase(fetchArticlesList.fulfilled, (state, action) => {
+      state.articlesList.isFetching = false;
+      state.articlesList.data = action.payload;
     });
-    builder.addCase(fetchArticles.rejected, state => {
-      state.isFetching = false;
+    builder.addCase(fetchArticlesList.rejected, state => {
+      state.articlesList.isFetching = false;
     });
   },
 });
 
-// export const { increment, decrement, incrementByAmount } = counterSlice.actions;
-
 export default counterSlice.reducer;
+
+export const selectArticlesList = (state: RootState): ArticlesState["articlesList"] => state.articles.articlesList;

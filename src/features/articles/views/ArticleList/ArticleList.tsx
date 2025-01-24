@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "store/hooks";
 import ArticlePreview from "./components/ArticlePreview";
 
 export default function ArticleList(): JSX.Element {
-  const { data, isFetching } = useAppSelector(selectArticlesList);
+  const { data, isLoading } = useAppSelector(selectArticlesList);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

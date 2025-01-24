@@ -7,7 +7,7 @@ import Markdown from "react-markdown";
 
 export default function Article(): JSX.Element {
   const { slug } = useParams<{ slug: string }>();
-  const { data, isFetching } = useAppSelector(selectSingleArticle);
+  const { data, isLoading } = useAppSelector(selectSingleArticle);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
@@ -54,7 +54,8 @@ export default function Article(): JSX.Element {
         </div>
       </nav>
 
-      {isFetching || data === null ? (
+      {/* TODO: I know that below solution makes UI looking ugly but I had to move on with required tasks so I left it for now */}
+      {isLoading || data === null ? (
         <div className="article-page">
           <div className="banner">
             <div className="container">

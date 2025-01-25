@@ -1,21 +1,17 @@
-import Nav from "components/Nav";
+import APP_PATHS from "constants/appPaths";
+import { logoutUser } from "features/user/store/userSlice";
+import { useLayoutEffect } from "react";
+import { useHistory } from "react-router-dom";
+import { useAppDispatch } from "store/hooks";
 
 export default function Logout(): JSX.Element {
-  return (
-    <>
-      <Nav />
+  const dispatch = useAppDispatch();
+  const history = useHistory();
 
-      <footer>
-        <div className="container">
-          <a href="/#" className="logo-font">
-            conduit
-          </a>
-          <span className="attribution">
-            An interactive learning project from <a href="https://thinkster.io">Thinkster</a>. Code &amp; design
-            licensed under MIT.
-          </span>
-        </div>
-      </footer>
-    </>
-  );
+  useLayoutEffect(() => {
+    dispatch(logoutUser());
+    history.push(APP_PATHS.ARTICLE_LIST);
+  }, [dispatch, history]);
+
+  return <></>;
 }

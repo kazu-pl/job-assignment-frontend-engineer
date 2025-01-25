@@ -6,7 +6,7 @@ import ArticleList from "./features/articles/views/ArticleList";
 import Editor from "./Editor";
 import LoginRegister from "./features/user/views/LoginRegister";
 import Logout from "./features/user/views/Logout";
-import Profile from "./Profile";
+import Profile from "./features/profiles/views/Profile";
 import Settings from "./Settings";
 
 import APP_PATHS from "constants/appPaths";

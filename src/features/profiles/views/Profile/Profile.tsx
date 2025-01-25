@@ -1,15 +1,29 @@
+import {
+  fetchProfile,
+  fetchArticlesWrittenByProfile,
+  selectProfile,
+  selectArticlesWrittenByProfile,
+} from "features/profiles/store/profilesSlice";
 import { useEffect } from "react";
-import { fetchArticlesList, selectArticlesList } from "features/articles/store/articlesSlice";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
+import FollowProfileButton from "../components/FollowProfileButton";
+import AuthorImage from "components/AuthorImage";
 import ArticlePreview from "components/ArticlePreview";
 
-export default function ArticleList(): JSX.Element {
-  const { data, isLoading } = useAppSelector(selectArticlesList);
+export default function Profile(): JSX.Element {
+  const { username } = useParams<{ username: string }>();
+
+  const { data: profileData, isLoading: isLoadingProfile } = useAppSelector(selectProfile);
+  const { data: profileArticlesData, isLoading: isLoadingProfileArticles } =
+    useAppSelector(selectArticlesWrittenByProfile);
+
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchArticlesList());
-  }, [dispatch]);
+    dispatch(fetchProfile(username));
+    dispatch(fetchArticlesWrittenByProfile(username));
+  }, [dispatch, username]);
 
   return (
     <>
@@ -51,68 +65,46 @@ export default function ArticleList(): JSX.Element {
         </div>
       </nav>
 
-      <div className="home-page">
-        <div className="banner">
+      <div className="profile-page">
+        <div className="user-info">
           <div className="container">
-            <h1 className="logo-font">conduit</h1>
-            <p>A place to share your knowledge.</p>
+            <div className="row">
+              {!isLoadingProfile && profileData && (
+                <div className="col-xs-12 col-md-10 offset-md-1">
+                  <AuthorImage imageUrl={profileData.profile.image} className="user-img" />
+                  <h4>{profileData.profile.username}</h4>
+                  <p>{profileData.profile.bio}</p>
+                  {/* <button className="btn btn-sm btn-outline-secondary action-btn">
+                    <i className="ion-plus-round" />
+                    &nbsp; Follow Eric Simons
+                  </button> */}
+                  <FollowProfileButton />
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
-        <div className="container page">
+        <div className="container">
           <div className="row">
-            <div className="col-md-9">
-              <div className="feed-toggle">
+            <div className="col-xs-12 col-md-10 offset-md-1">
+              <div className="articles-toggle">
                 <ul className="nav nav-pills outline-active">
                   <li className="nav-item">
-                    <a className="nav-link disabled" href="">
-                      Your Feed
+                    <a className="nav-link active" href="">
+                      My Articles
                     </a>
                   </li>
                   <li className="nav-item">
-                    <a className="nav-link active" href="">
-                      Global Feed
+                    <a className="nav-link" href="">
+                      Favorited Articles
                     </a>
                   </li>
                 </ul>
               </div>
 
-              {data?.articles.map(article => (
-                <ArticlePreview article={article} key={article.slug} />
-              ))}
-            </div>
-
-            <div className="col-md-3">
-              <div className="sidebar">
-                <p>Popular Tags</p>
-
-                <div className="tag-list">
-                  <a href="" className="tag-pill tag-default">
-                    programming
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    javascript
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    emberjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    angularjs
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    react
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    mean
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    node
-                  </a>
-                  <a href="" className="tag-pill tag-default">
-                    rails
-                  </a>
-                </div>
-              </div>
+              {!isLoadingProfileArticles &&
+                profileArticlesData?.articles.map(article => <ArticlePreview article={article} key={article.slug} />)}
             </div>
           </div>
         </div>

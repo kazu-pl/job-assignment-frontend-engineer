@@ -1,7 +1,7 @@
 import AuthorImage from "components/AuthorImage";
 import { fetchSingleArticle, selectSingleArticle } from "features/articles/store/articlesSlice";
 import { useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import Markdown from "react-markdown";
 import APP_PATHS from "constants/appPaths";
@@ -29,16 +29,11 @@ export default function Article(): JSX.Element {
 
               <div className="article-meta">
                 <AuthorImage
-                  imageUrl={data.article.author.image}
+                  createdAt={data.article.createdAt}
                   to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)}
+                  username={data.article.author.username}
+                  imageUrl={data.article.author.image}
                 />
-                <div className="info">
-                  <Link to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)} className="author">
-                    {data.article.author.username}
-                  </Link>
-
-                  <span className="date">{new Date(data.article.createdAt).toLocaleDateString()}</span>
-                </div>
                 <button className="btn btn-sm btn-outline-secondary">
                   <i className="ion-plus-round" />
                   &nbsp; Follow {data.article.author.username} <span className="counter">(10)</span>
@@ -61,15 +56,12 @@ export default function Article(): JSX.Element {
             {data && (
               <>
                 <div className="article-meta">
-                  <a href="/#/profile/ericsimmons">
-                    <img src="http://i.imgur.com/Qr71crq.jpg" />
-                  </a>
-                  <div className="info">
-                    <a href="/#/profile/ericsimmons" className="author">
-                      {data.article.author.username}
-                    </a>
-                    <span className="date">{new Date(data.article.createdAt).toLocaleDateString()}</span>
-                  </div>
+                  <AuthorImage
+                    createdAt={data.article.createdAt}
+                    to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)}
+                    username={data.article.author.username}
+                    imageUrl={data.article.author.image}
+                  />
                   <button className="btn btn-sm btn-outline-secondary">
                     <i className="ion-plus-round" />
                     &nbsp; Follow {data.article.author.username}

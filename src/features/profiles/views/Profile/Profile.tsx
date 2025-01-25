@@ -8,9 +8,9 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import FollowProfileButton from "components/FollowProfileButton";
-import AuthorImage from "components/AuthorImage";
 import ArticlePreview from "components/ArticlePreview";
 import Nav from "components/Nav";
+import Image from "components/Image";
 
 export default function Profile(): JSX.Element {
   const { username } = useParams<{ username: string }>();
@@ -36,7 +36,7 @@ export default function Profile(): JSX.Element {
             <div className="row">
               {!isLoadingProfile && profileData && (
                 <div className="col-xs-12 col-md-10 offset-md-1">
-                  <AuthorImage imageUrl={profileData.profile.image} className="user-img" />
+                  <Image url={profileData.profile.image} className="user-img" />
                   <h4>{profileData.profile.username}</h4>
                   <p>{profileData.profile.bio}</p>
                   {/* <button className="btn btn-sm btn-outline-secondary action-btn">

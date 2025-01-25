@@ -1,2 +1,2 @@
-export { default, defaultAuthorImageUrl } from "./AuthorImage";
+export { default } from "./AuthorImage";
 export type { AuthorImageProps } from "./AuthorImage";

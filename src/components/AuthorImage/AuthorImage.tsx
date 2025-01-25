@@ -1,31 +1,29 @@
-import { useMemo } from "react";
+import Image from "components/Image";
 import { Link } from "react-router-dom";
-
-export const defaultAuthorImageUrl = "http://i.imgur.com/N4VcUeJ.jpg";
 
 export interface AuthorImageProps {
   imageUrl?: string;
-  /**
-   * img tag className
-   */
-  className?: string;
-  /**
-   * If used image is wrapped with react-router Link component
-   */
-  to?: string;
+  to: string;
+  username: string;
+  createdAt: string;
 }
 
-const AuthorImage = ({ imageUrl, to, className }: AuthorImageProps): JSX.Element => {
-  const imgTag = useMemo(
-    () => <img src={imageUrl || defaultAuthorImageUrl} className={className} />,
-    [imageUrl, className]
+const AuthorImage = ({ imageUrl, to, username, createdAt }: AuthorImageProps): JSX.Element => {
+  return (
+    <div style={{ display: "inline-block" }}>
+      <Link to={to}>
+        <Image url={imageUrl} />
+      </Link>
+
+      <div className="info">
+        <Link to={to} className="author text-primary">
+          {username}
+        </Link>
+
+        <span className="date">{new Date(createdAt).toLocaleDateString()}</span>
+      </div>
+    </div>
   );
-
-  if (to) {
-    return <Link to={to}>{imgTag}</Link>;
-  }
-
-  return imgTag;
 };
 
 export default AuthorImage;

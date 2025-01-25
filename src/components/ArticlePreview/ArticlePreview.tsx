@@ -10,15 +10,15 @@ export interface ArticlePreviewProps {
 
 const ArticlePreview = ({ article }: ArticlePreviewProps): JSX.Element => {
   return (
-    <div className="article-preview" key={article.createdAt}>
+    <div className="article-preview" key={article.slug}>
       <div className="article-meta">
-        <AuthorImage imageUrl={article.author.image} to={APP_PATHS.PROFILE_SINGLE(article.author.username)} />
-        <div className="info">
-          <Link className="author" to={APP_PATHS.PROFILE_SINGLE(article.author.username)}>
-            {article.author.username}
-          </Link>
-          <span className="date">{new Date(article.createdAt).toLocaleDateString()}</span>
-        </div>
+        <AuthorImage
+          createdAt={article.createdAt}
+          to={APP_PATHS.PROFILE_SINGLE(article.author.username)}
+          username={article.author.username}
+          imageUrl={article.author.image}
+        />
+
         <FavoriteArticleBtn article={article} />
       </div>
       <Link to={APP_PATHS.ARTICLE_SINGLE(article.slug)} className="preview-link">

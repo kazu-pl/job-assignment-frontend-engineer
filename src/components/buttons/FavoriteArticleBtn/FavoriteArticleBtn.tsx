@@ -1,6 +1,6 @@
 import { useAppDispatch } from "store/hooks";
-import { favoriteArticle, unfavoriteArticle } from "features/articles/store/articlesSlice";
 import { Article } from "types/conduit-api.types";
+import { favoriteArticle, unfavoriteArticle } from "features/articles/store/articlesSlice.thunks";
 
 export interface FavoriteArticleBtnProps {
   article: Article;

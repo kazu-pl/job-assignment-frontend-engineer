@@ -1,5 +1,5 @@
 import APP_PATHS from "constants/appPaths";
-import { selectUserData } from "features/user/store/userSlice";
+import { selectUserData } from "features/user/store/userSlice.selectors";
 import { Link } from "react-router-dom";
 import { useAppSelector } from "store/hooks";
 

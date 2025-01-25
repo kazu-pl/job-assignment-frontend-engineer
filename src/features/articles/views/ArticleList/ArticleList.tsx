@@ -1,5 +1,6 @@
 import { useEffect } from "react";
-import { fetchArticlesList, selectArticlesList } from "features/articles/store/articlesSlice";
+import { selectArticlesList } from "features/articles/store/articlesSlice.selectors";
+import { fetchArticlesList } from "features/articles/store/articlesSlice.thunks";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import ArticlePreview from "components/ArticlePreview";
 import Nav from "components/Nav";

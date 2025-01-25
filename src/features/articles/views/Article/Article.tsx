@@ -1,5 +1,6 @@
 import AuthorImage from "components/AuthorImage";
-import { fetchSingleArticle, selectSingleArticle } from "features/articles/store/articlesSlice";
+import { clearSingleArticle } from "features/articles/store/articlesSlice";
+
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -7,15 +8,32 @@ import Markdown from "react-markdown";
 import APP_PATHS from "constants/appPaths";
 import FavoriteArticleBtn from "components/buttons/FavoriteArticleBtn";
 import Nav from "components/Nav";
+import FollowProfileBtn from "components/buttons/FollowProfileBtn";
+import { selectSingleArticle } from "features/articles/store/articlesSlice.selectors";
+import { fetchSingleArticle } from "features/articles/store/articlesSlice.thunks";
+import { fetchProfile } from "features/profiles/store/profilesSlice.thunks";
+import { selectProfile } from "features/profiles/store/profilesSlice.selectors";
 
 export default function Article(): JSX.Element {
   const { slug } = useParams<{ slug: string }>();
-  const { data } = useAppSelector(selectSingleArticle);
+  const { data: articleData } = useAppSelector(selectSingleArticle);
+  const { data: profileData } = useAppSelector(selectProfile);
   const dispatch = useAppDispatch();
 
   useEffect(() => {
     dispatch(fetchSingleArticle(slug));
+
+    return () => {
+      // we can make clean up here etc
+      dispatch(clearSingleArticle());
+    };
   }, [dispatch, slug]);
+
+  useEffect(() => {
+    if (!profileData && articleData) {
+      dispatch(fetchProfile(articleData?.article.author.username));
+    }
+  }, [articleData, dispatch, profileData]);
 
   return (
     <>
@@ -23,23 +41,20 @@ export default function Article(): JSX.Element {
 
       <div className="article-page">
         <div className="banner">
-          {data && (
+          {articleData && (
             <div className="container">
-              <h1>{data.article.title}</h1>
+              <h1>{articleData.article.title}</h1>
 
               <div className="article-meta">
                 <AuthorImage
-                  createdAt={data.article.createdAt}
-                  to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)}
-                  username={data.article.author.username}
-                  imageUrl={data.article.author.image}
+                  createdAt={articleData.article.createdAt}
+                  to={APP_PATHS.PROFILE_SINGLE(articleData.article.author.username)}
+                  username={articleData.article.author.username}
+                  imageUrl={articleData.article.author.image}
                 />
-                <button className="btn btn-sm btn-outline-secondary">
-                  <i className="ion-plus-round" />
-                  &nbsp; Follow {data.article.author.username} <span className="counter">(10)</span>
-                </button>
+                <FollowProfileBtn />
                 &nbsp;&nbsp;
-                <FavoriteArticleBtn article={data.article} text="Favorite Post" isPulledToTheRight={false} />
+                <FavoriteArticleBtn article={articleData.article} text="Favorite Post" isPulledToTheRight={false} />
               </div>
             </div>
           )}
@@ -47,31 +62,24 @@ export default function Article(): JSX.Element {
 
         <div className="container page">
           <div className="row article-content">
-            <div className="col-md-12">{data && <Markdown>{data.article.body}</Markdown>}</div>
+            <div className="col-md-12">{articleData && <Markdown>{articleData.article.body}</Markdown>}</div>
           </div>
 
           <hr />
 
           <div className="article-actions">
-            {data && (
+            {articleData && (
               <>
                 <div className="article-meta">
                   <AuthorImage
-                    createdAt={data.article.createdAt}
-                    to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)}
-                    username={data.article.author.username}
-                    imageUrl={data.article.author.image}
+                    createdAt={articleData.article.createdAt}
+                    to={APP_PATHS.PROFILE_SINGLE(articleData.article.author.username)}
+                    username={articleData.article.author.username}
+                    imageUrl={articleData.article.author.image}
                   />
-                  <button className="btn btn-sm btn-outline-secondary">
-                    <i className="ion-plus-round" />
-                    &nbsp; Follow {data.article.author.username}
-                  </button>
+                  <FollowProfileBtn />
                   &nbsp;
-                  {/* <button className="btn btn-sm btn-outline-primary">
-                    <i className="ion-heart" />
-                    &nbsp; Favorite Post <span className="counter">(29)</span>
-                  </button> */}
-                  <FavoriteArticleBtn article={data.article} text="Favorite Post" isPulledToTheRight={false} />
+                  <FavoriteArticleBtn article={articleData.article} text="Favorite Post" isPulledToTheRight={false} />
                 </div>
               </>
             )}

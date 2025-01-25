@@ -12,10 +12,14 @@ const initialState: UserState = {
   isLoading: true,
 };
 
-export const loginUser = createAsyncThunk("users/loginUser", async (data: LoginUserRequest) => {
-  const response = await axiosInstance.post<UserResponse>(`/users/login`, data);
+export const loginUser = createAsyncThunk("users/loginUser", async (data: LoginUserRequest, { rejectWithValue }) => {
+  try {
+    const response = await axiosInstance.post<UserResponse>(`/users/login`, data);
 
-  return response.data;
+    return response.data;
+  } catch (err) {
+    return rejectWithValue(err);
+  }
 });
 
 export const userSlice = createSlice({

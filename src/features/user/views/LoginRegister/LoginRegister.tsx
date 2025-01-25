@@ -3,6 +3,8 @@ import { useCallback } from "react";
 import { useAppDispatch } from "store/hooks";
 import { Formik, Form, FormikHelpers, Field } from "formik";
 import { LoginUserRequest } from "types/conduit-api.types";
+import { useHistory } from "react-router-dom";
+import APP_PATHS from "constants/appPaths";
 
 const initialLoginFormValues: LoginUserRequest["user"] = {
   email: "",
@@ -11,12 +13,18 @@ const initialLoginFormValues: LoginUserRequest["user"] = {
 
 export default function LoginRegister(): JSX.Element {
   const dispatch = useAppDispatch();
+  const history = useHistory();
 
   const handleLoginUserFormik = useCallback(
-    (values: LoginUserRequest["user"], helpers: FormikHelpers<LoginUserRequest["user"]>) => {
-      dispatch(loginUser({ user: values }));
+    async (values: LoginUserRequest["user"], helpers: FormikHelpers<LoginUserRequest["user"]>) => {
+      try {
+        await dispatch(loginUser({ user: values }));
+        history.push(APP_PATHS.ARTICLE_LIST);
+      } catch (err) {
+        console.log({ err, where: "LoginRegister" });
+      }
     },
-    [dispatch]
+    [dispatch, history]
   );
 
   return (
@@ -88,7 +96,9 @@ export default function LoginRegister(): JSX.Element {
                         name="password"
                       />
                     </fieldset>
-                    <button className="btn btn-lg btn-primary pull-xs-right">Sign in</button>
+                    <button className="btn btn-lg btn-primary pull-xs-right" type="submit">
+                      Sign in
+                    </button>
                   </Form>
                 )}
               </Formik>

@@ -1,9 +1,10 @@
-import AuthorImage from "features/articles/components/AuthorImage";
+import AuthorImage from "components/AuthorImage";
 import { fetchSingleArticle, selectSingleArticle } from "features/articles/store/articlesSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import Markdown from "react-markdown";
+import APP_PATHS from "constants/appPaths";
 
 export default function Article(): JSX.Element {
   const { slug } = useParams<{ slug: string }>();
@@ -70,7 +71,11 @@ export default function Article(): JSX.Element {
               <h1>{data.article.title}</h1>
 
               <div className="article-meta">
-                <AuthorImage name={data.article.author.username} imageUrl={data.article.author.image} />
+                <AuthorImage
+                  name={data.article.author.username}
+                  imageUrl={data.article.author.image}
+                  to={APP_PATHS.PROFILE_SINGLE(data.article.author.username)}
+                />
                 <div className="info">
                   <a href="/#/profile/ericsimmons" className="author">
                     {data.article.author.username}

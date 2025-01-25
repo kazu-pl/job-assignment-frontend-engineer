@@ -30,13 +30,26 @@ export const fetchArticlesList = createAsyncThunk("articles/fetchArticlesList", 
   return response.data;
 });
 
-export const fetchSingleArticle = createAsyncThunk("articles/fetchSingleArticle", async (slug: string) => {
-  const response = await axiosInstance.get<SingleArticleResponse>(`/articles/${slug}`);
+export const fetchSingleArticle = createAsyncThunk("articles/fetchSingleArticle", async (slug: string, thunkAPI) => {
+  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
+
+  const response = await axiosInstance.get<SingleArticleResponse>(`/articles/${slug}`, {
+    headers: { Authorization: `bearer ${token}` },
+  });
   return response.data;
 });
 
-export const counterSlice = createSlice({
-  name: "counter",
+export const favoriteArticle = createAsyncThunk("articles/favoriteArticle", async (slug: string, thunkAPI) => {
+  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
+
+  const response = await axiosInstance.post<SingleArticleResponse>(`/articles/${slug}/favorite`, undefined, {
+    headers: { Authorization: `bearer ${token}` },
+  });
+  return response.data;
+});
+
+export const articlesSlice = createSlice({
+  name: "articles",
   initialState,
   reducers: {},
   extraReducers: builder => {
@@ -61,10 +74,30 @@ export const counterSlice = createSlice({
     builder.addCase(fetchSingleArticle.rejected, state => {
       state.singleArticle.isLoading = false;
     });
+
+    builder.addCase(favoriteArticle.pending, state => {
+      //
+    });
+    builder.addCase(favoriteArticle.fulfilled, (state, action) => {
+      const favArticle = state.articlesList.data?.articles.find(
+        article => article.slug === action.payload.article.slug
+      );
+
+      if (favArticle) {
+        favArticle.favoritesCount += 1;
+      }
+
+      // state.articlesList.data?.articles.map(article =>
+      //   article.slug === action.payload.article.slug ? favArticle : article
+      // );
+    });
+    builder.addCase(favoriteArticle.rejected, state => {
+      //
+    });
   },
 });
 
-export default counterSlice.reducer;
+export default articlesSlice.reducer;
 
 export const selectArticlesList = (state: RootState): ArticlesState["articlesList"] => state.articles.articlesList;
 export const selectSingleArticle = (state: RootState): ArticlesState["singleArticle"] => state.articles.singleArticle;

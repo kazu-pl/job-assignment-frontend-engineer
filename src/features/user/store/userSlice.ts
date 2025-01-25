@@ -1,7 +1,6 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "libs/axios/axiosInstance";
-import { RootState } from "store";
-import { LoginUserRequest, UserResponse } from "types/conduit-api.types";
+import { createSlice } from "@reduxjs/toolkit";
+import { UserResponse } from "types/conduit-api.types";
+import { loginUser } from "./userSlice.thunks";
 
 export interface UserState {
   data: UserResponse | null;
@@ -12,16 +11,6 @@ const initialState: UserState = {
   data: null,
   isLoading: true,
 };
-
-export const loginUser = createAsyncThunk("users/loginUser", async (data: LoginUserRequest, { rejectWithValue }) => {
-  try {
-    const response = await axiosInstance.post<UserResponse>(`/users/login`, data);
-
-    return response.data;
-  } catch (err) {
-    return rejectWithValue(err);
-  }
-});
 
 export const userSlice = createSlice({
   name: "users",
@@ -48,5 +37,3 @@ export const userSlice = createSlice({
 export default userSlice.reducer;
 
 export const { logoutUser } = userSlice.actions;
-
-export const selectUserData = (state: RootState): UserResponse | null => state.user.data;

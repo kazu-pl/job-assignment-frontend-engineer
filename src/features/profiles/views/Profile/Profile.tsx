@@ -1,9 +1,3 @@
-import {
-  fetchProfile,
-  fetchArticlesWrittenByProfile,
-  selectProfile,
-  selectArticlesWrittenByProfile,
-} from "features/profiles/store/profilesSlice";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
@@ -11,6 +5,10 @@ import FollowProfileBtn from "components/buttons/FollowProfileBtn";
 import ArticlePreview from "components/ArticlePreview";
 import Nav from "components/Nav";
 import Image from "components/Image";
+import { fetchArticlesWrittenByProfile } from "features/articles/store/articlesSlice.thunks";
+import { selectArticlesWrittenByProfile } from "features/articles/store/articlesSlice.selectors";
+import { fetchProfile } from "features/profiles/store/profilesSlice.thunks";
+import { selectProfile } from "features/profiles/store/profilesSlice.selectors";
 
 export default function Profile(): JSX.Element {
   const { username } = useParams<{ username: string }>();
@@ -22,7 +20,12 @@ export default function Profile(): JSX.Element {
   const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(fetchProfile(username));
+    if (!profileData) {
+      dispatch(fetchProfile(username));
+    }
+  }, [dispatch, username, profileData]);
+
+  useEffect(() => {
     dispatch(fetchArticlesWrittenByProfile(username));
   }, [dispatch, username]);
 

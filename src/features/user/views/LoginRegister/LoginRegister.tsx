@@ -1,4 +1,3 @@
-import { loginUser } from "features/user/store/userSlice";
 import { useCallback } from "react";
 import { useAppDispatch } from "store/hooks";
 import { Formik, Form, Field } from "formik";
@@ -6,6 +5,7 @@ import { LoginUserRequest } from "types/conduit-api.types";
 import { useHistory } from "react-router-dom";
 import APP_PATHS from "constants/appPaths";
 import Nav from "components/Nav";
+import { loginUser } from "features/user/store/userSlice.thunks";
 
 const initialLoginFormValues: LoginUserRequest["user"] = {
   email: "",

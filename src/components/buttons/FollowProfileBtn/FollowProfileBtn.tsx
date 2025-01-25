@@ -1,8 +1,9 @@
-import { followProfile, selectProfile, unfollowProfile } from "features/profiles/store/profilesSlice";
+import { selectProfile } from "features/profiles/store/profilesSlice.selectors";
+import { followProfile, unfollowProfile } from "features/profiles/store/profilesSlice.thunks";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 
-const FollowProfileButton = (): JSX.Element => {
-  const { data, isLoading } = useAppSelector(selectProfile);
+const FollowProfileBtn = (): JSX.Element => {
+  const { data } = useAppSelector(selectProfile);
 
   const dispatch = useAppDispatch();
 
@@ -15,12 +16,13 @@ const FollowProfileButton = (): JSX.Element => {
       dispatch(followProfile(data.profile.username));
     }
   };
-
-  if (isLoading || !data) return <></>;
-
+  // TODO: I didn't display follow count because seems like API doesn't return that info or I could not find it
   return (
-    <button className="btn btn-sm btn-outline-secondary action-btn" onClick={handleToggleFollowingStatus}>
-      {data.profile.following ? (
+    <button
+      className={`btn btn-sm ${data?.profile.following ? "btn-secondary" : "btn-outline-secondary"} action-btn`}
+      onClick={handleToggleFollowingStatus}
+    >
+      {data?.profile.following ? (
         <>
           <i className="ion-minus-round" />
           &nbsp; Unfollow {data.profile.username}
@@ -28,11 +30,11 @@ const FollowProfileButton = (): JSX.Element => {
       ) : (
         <>
           <i className="ion-plus-round" />
-          &nbsp; Follow {data.profile.username}
+          &nbsp; Follow {data?.profile.username}
         </>
       )}
     </button>
   );
 };
 
-export default FollowProfileButton;
+export default FollowProfileBtn;

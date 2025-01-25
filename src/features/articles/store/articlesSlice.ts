@@ -1,7 +1,13 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import axiosInstance from "libs/axios/axiosInstance";
-import { RootState } from "store";
+import { createSlice } from "@reduxjs/toolkit";
 import { MultipleArticlesResponse, SingleArticleResponse } from "types/conduit-api.types";
+import { updateArticlesListOnFavChange } from "./articlesSlice.utils";
+import {
+  favoriteArticle,
+  fetchArticlesList,
+  fetchArticlesWrittenByProfile,
+  fetchSingleArticle,
+  unfavoriteArticle,
+} from "./articlesSlice.thunks";
 
 export interface ArticlesState {
   articlesList: {
@@ -10,6 +16,10 @@ export interface ArticlesState {
   };
   singleArticle: {
     data: SingleArticleResponse | null;
+    isLoading: boolean;
+  };
+  profileArticleList: {
+    data: MultipleArticlesResponse | null;
     isLoading: boolean;
   };
 }
@@ -23,44 +33,20 @@ const initialState: ArticlesState = {
     data: null,
     isLoading: true,
   },
+  profileArticleList: {
+    data: null,
+    isLoading: true,
+  },
 };
-
-export const fetchArticlesList = createAsyncThunk("articles/fetchArticlesList", async () => {
-  const response = await axiosInstance.get<MultipleArticlesResponse>(`/articles`);
-  return response.data;
-});
-
-export const fetchSingleArticle = createAsyncThunk("articles/fetchSingleArticle", async (slug: string, thunkAPI) => {
-  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
-
-  const response = await axiosInstance.get<SingleArticleResponse>(`/articles/${slug}`, {
-    headers: { Authorization: `bearer ${token}` },
-  });
-  return response.data;
-});
-
-export const favoriteArticle = createAsyncThunk("articles/favoriteArticle", async (slug: string, thunkAPI) => {
-  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
-
-  const response = await axiosInstance.post<SingleArticleResponse>(`/articles/${slug}/favorite`, undefined, {
-    headers: { Authorization: `bearer ${token}` },
-  });
-  return response.data;
-});
-
-export const unfavoriteArticle = createAsyncThunk("articles/unfavoriteArticle", async (slug: string, thunkAPI) => {
-  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
-
-  const response = await axiosInstance.delete<SingleArticleResponse>(`/articles/${slug}/favorite`, {
-    headers: { Authorization: `bearer ${token}` },
-  });
-  return response.data;
-});
 
 export const articlesSlice = createSlice({
   name: "articles",
   initialState,
-  reducers: {},
+  reducers: {
+    clearSingleArticle(state) {
+      state.singleArticle = initialState.singleArticle;
+    },
+  },
   extraReducers: builder => {
     builder.addCase(fetchArticlesList.pending, state => {
       state.articlesList.isLoading = true;
@@ -88,19 +74,17 @@ export const articlesSlice = createSlice({
       //
     });
     builder.addCase(favoriteArticle.fulfilled, (state, action) => {
-      const favArticle = state.articlesList.data?.articles.find(
-        article => article.slug === action.payload.article.slug
-      );
+      // update articles list
+      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article.slug, "+");
 
-      if (favArticle) {
-        favArticle.favoritesCount += 1;
-        favArticle.favorited = true;
-      }
-
+      // update single article
       if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
         state.singleArticle.data.article.favoritesCount += 1;
         state.singleArticle.data.article.favorited = true;
       }
+
+      // update articles written by profile
+      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article.slug, "+");
     });
     builder.addCase(favoriteArticle.rejected, () => {
       //
@@ -109,18 +93,10 @@ export const articlesSlice = createSlice({
       //
     });
     builder.addCase(unfavoriteArticle.fulfilled, (state, action) => {
-      const favArticle = state.articlesList.data?.articles.find(
-        article => article.slug === action.payload.article.slug
-      );
+      // update articles list
+      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article.slug, "-");
 
-      if (favArticle) {
-        if (favArticle.favoritesCount > 0) {
-          favArticle.favoritesCount -= 1;
-        }
-
-        favArticle.favorited = false;
-      }
-
+      // update single article
       if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
         if (state.singleArticle.data.article.favoritesCount > 0) {
           state.singleArticle.data.article.favoritesCount -= 1;
@@ -128,14 +104,27 @@ export const articlesSlice = createSlice({
 
         state.singleArticle.data.article.favorited = false;
       }
+
+      // update articles written by profile
+      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article.slug, "-");
     });
     builder.addCase(unfavoriteArticle.rejected, () => {
       //
     });
+
+    builder.addCase(fetchArticlesWrittenByProfile.pending, state => {
+      state.profileArticleList.isLoading = true;
+    });
+    builder.addCase(fetchArticlesWrittenByProfile.fulfilled, (state, action) => {
+      state.profileArticleList.isLoading = false;
+      state.profileArticleList.data = action.payload;
+    });
+    builder.addCase(fetchArticlesWrittenByProfile.rejected, state => {
+      state.profileArticleList.isLoading = false;
+    });
   },
 });
 
-export default articlesSlice.reducer;
+export const { clearSingleArticle } = articlesSlice.actions;
 
-export const selectArticlesList = (state: RootState): ArticlesState["articlesList"] => state.articles.articlesList;
-export const selectSingleArticle = (state: RootState): ArticlesState["singleArticle"] => state.articles.singleArticle;
+export default articlesSlice.reducer;

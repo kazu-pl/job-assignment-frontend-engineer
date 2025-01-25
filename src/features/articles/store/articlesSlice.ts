@@ -48,6 +48,15 @@ export const favoriteArticle = createAsyncThunk("articles/favoriteArticle", asyn
   return response.data;
 });
 
+export const unfavoriteArticle = createAsyncThunk("articles/unfavoriteArticle", async (slug: string, thunkAPI) => {
+  const token = (thunkAPI.getState() as RootState).user.data?.user.token;
+
+  const response = await axiosInstance.delete<SingleArticleResponse>(`/articles/${slug}/favorite`, {
+    headers: { Authorization: `bearer ${token}` },
+  });
+  return response.data;
+});
+
 export const articlesSlice = createSlice({
   name: "articles",
   initialState,
@@ -85,13 +94,42 @@ export const articlesSlice = createSlice({
 
       if (favArticle) {
         favArticle.favoritesCount += 1;
+        favArticle.favorited = true;
       }
 
-      // state.articlesList.data?.articles.map(article =>
-      //   article.slug === action.payload.article.slug ? favArticle : article
-      // );
+      if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
+        state.singleArticle.data.article.favoritesCount += 1;
+        state.singleArticle.data.article.favorited = true;
+      }
     });
     builder.addCase(favoriteArticle.rejected, state => {
+      //
+    });
+    builder.addCase(unfavoriteArticle.pending, state => {
+      //
+    });
+    builder.addCase(unfavoriteArticle.fulfilled, (state, action) => {
+      const favArticle = state.articlesList.data?.articles.find(
+        article => article.slug === action.payload.article.slug
+      );
+
+      if (favArticle) {
+        if (favArticle.favoritesCount > 0) {
+          favArticle.favoritesCount -= 1;
+        }
+
+        favArticle.favorited = false;
+      }
+
+      if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
+        if (state.singleArticle.data.article.favoritesCount > 0) {
+          state.singleArticle.data.article.favoritesCount -= 1;
+        }
+
+        state.singleArticle.data.article.favorited = false;
+      }
+    });
+    builder.addCase(unfavoriteArticle.rejected, state => {
       //
     });
   },

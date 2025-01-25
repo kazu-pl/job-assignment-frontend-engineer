@@ -7,7 +7,7 @@ import {
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
-import FollowProfileButton from "components/FollowProfileButton";
+import FollowProfileBtn from "components/buttons/FollowProfileBtn";
 import ArticlePreview from "components/ArticlePreview";
 import Nav from "components/Nav";
 import Image from "components/Image";
@@ -43,7 +43,7 @@ export default function Profile(): JSX.Element {
                     <i className="ion-plus-round" />
                     &nbsp; Follow Eric Simons
                   </button> */}
-                  <FollowProfileButton />
+                  <FollowProfileBtn />
                 </div>
               )}
             </div>

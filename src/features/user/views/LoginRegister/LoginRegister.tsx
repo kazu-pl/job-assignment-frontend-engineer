@@ -1,7 +1,7 @@
 import { loginUser } from "features/user/store/userSlice";
 import { useCallback } from "react";
 import { useAppDispatch } from "store/hooks";
-import { Formik, Form, FormikHelpers, Field } from "formik";
+import { Formik, Form, Field } from "formik";
 import { LoginUserRequest } from "types/conduit-api.types";
 import { useHistory } from "react-router-dom";
 import APP_PATHS from "constants/appPaths";
@@ -17,7 +17,7 @@ export default function LoginRegister(): JSX.Element {
   const history = useHistory();
 
   const handleLoginUserFormik = useCallback(
-    async (values: LoginUserRequest["user"], helpers: FormikHelpers<LoginUserRequest["user"]>) => {
+    async (values: LoginUserRequest["user"]) => {
       try {
         await dispatch(loginUser({ user: values }));
         history.push(APP_PATHS.ARTICLE_LIST);
@@ -48,24 +48,22 @@ export default function LoginRegister(): JSX.Element {
                 // validationSchema={validationFileSchema}
                 enableReinitialize
               >
-                {({ isSubmitting }) => (
-                  <Form>
-                    <fieldset className="form-group">
-                      <Field className="form-control form-control-lg" type="text" placeholder="email" name="email" />
-                    </fieldset>
-                    <fieldset className="form-group">
-                      <Field
-                        className="form-control form-control-lg"
-                        type="password"
-                        placeholder="password"
-                        name="password"
-                      />
-                    </fieldset>
-                    <button className="btn btn-lg btn-primary pull-xs-right" type="submit">
-                      Sign in
-                    </button>
-                  </Form>
-                )}
+                <Form>
+                  <fieldset className="form-group">
+                    <Field className="form-control form-control-lg" type="text" placeholder="email" name="email" />
+                  </fieldset>
+                  <fieldset className="form-group">
+                    <Field
+                      className="form-control form-control-lg"
+                      type="password"
+                      placeholder="password"
+                      name="password"
+                    />
+                  </fieldset>
+                  <button className="btn btn-lg btn-primary pull-xs-right" type="submit">
+                    Sign in
+                  </button>
+                </Form>
               </Formik>
             </div>
           </div>

@@ -2,7 +2,7 @@ import APP_PATHS from "constants/appPaths";
 import { Link } from "react-router-dom";
 import { Article } from "types/conduit-api.types";
 import AuthorImage from "components/AuthorImage";
-import FavoriteArticleBtn from "components/FavoriteArticleBtn";
+import FavoriteArticleBtn from "components/buttons/FavoriteArticleBtn";
 
 export interface ArticlePreviewProps {
   article: Article;

@@ -84,7 +84,7 @@ export const articlesSlice = createSlice({
       state.singleArticle.isLoading = false;
     });
 
-    builder.addCase(favoriteArticle.pending, state => {
+    builder.addCase(favoriteArticle.pending, () => {
       //
     });
     builder.addCase(favoriteArticle.fulfilled, (state, action) => {
@@ -102,10 +102,10 @@ export const articlesSlice = createSlice({
         state.singleArticle.data.article.favorited = true;
       }
     });
-    builder.addCase(favoriteArticle.rejected, state => {
+    builder.addCase(favoriteArticle.rejected, () => {
       //
     });
-    builder.addCase(unfavoriteArticle.pending, state => {
+    builder.addCase(unfavoriteArticle.pending, () => {
       //
     });
     builder.addCase(unfavoriteArticle.fulfilled, (state, action) => {
@@ -129,7 +129,7 @@ export const articlesSlice = createSlice({
         state.singleArticle.data.article.favorited = false;
       }
     });
-    builder.addCase(unfavoriteArticle.rejected, state => {
+    builder.addCase(unfavoriteArticle.rejected, () => {
       //
     });
   },

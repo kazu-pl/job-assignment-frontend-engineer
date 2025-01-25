@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosInstance from "libs/axios/axiosInstance";
+import { RootState } from "store";
 import { LoginUserRequest, UserResponse } from "types/conduit-api.types";
 
 export interface UserState {
@@ -41,3 +42,5 @@ export const userSlice = createSlice({
 });
 
 export default userSlice.reducer;
+
+export const selectUserData = (state: RootState): UserResponse | null => state.user.data;

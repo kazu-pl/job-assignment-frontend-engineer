@@ -5,6 +5,7 @@ import { Formik, Form, FormikHelpers, Field } from "formik";
 import { LoginUserRequest } from "types/conduit-api.types";
 import { useHistory } from "react-router-dom";
 import APP_PATHS from "constants/appPaths";
+import Nav from "components/Nav";
 
 const initialLoginFormValues: LoginUserRequest["user"] = {
   email: "",
@@ -29,43 +30,7 @@ export default function LoginRegister(): JSX.Element {
 
   return (
     <>
-      <nav className="navbar navbar-light">
-        <div className="container">
-          <a className="navbar-brand" href="/#">
-            conduit
-          </a>
-          <ul className="nav navbar-nav pull-xs-right">
-            <li className="nav-item">
-              {/* Add "active" class when you're on that page" */}
-              <a className="nav-link active" href="/#">
-                Home
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/editor">
-                <i className="ion-compose" />
-                &nbsp;New Article
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/settings">
-                <i className="ion-gear-a" />
-                &nbsp;Settings
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/login">
-                Sign in
-              </a>
-            </li>
-            <li className="nav-item">
-              <a className="nav-link" href="/#/register">
-                Sign in
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
+      <Nav />
 
       <div className="auth-page">
         <div className="container page">

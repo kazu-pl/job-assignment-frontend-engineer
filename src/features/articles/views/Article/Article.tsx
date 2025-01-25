@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "store/hooks";
 import Markdown from "react-markdown";
 import APP_PATHS from "constants/appPaths";
-import FavoriteArticleBtn from "components/FavoriteArticleBtn";
+import FavoriteArticleBtn from "components/buttons/FavoriteArticleBtn";
 import Nav from "components/Nav";
 
 export default function Article(): JSX.Element {

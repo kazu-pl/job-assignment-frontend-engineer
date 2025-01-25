@@ -5,7 +5,7 @@ import ArticlePreview from "components/ArticlePreview";
 import Nav from "components/Nav";
 
 export default function ArticleList(): JSX.Element {
-  const { data, isLoading } = useAppSelector(selectArticlesList);
+  const { data } = useAppSelector(selectArticlesList);
   const dispatch = useAppDispatch();
 
   useEffect(() => {

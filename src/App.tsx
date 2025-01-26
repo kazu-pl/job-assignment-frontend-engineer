@@ -3,7 +3,7 @@ import { HashRouter as Router, Switch, Route } from "react-router-dom";
 
 import Article from "./features/articles/views/Article";
 import ArticleList from "./features/articles/views/ArticleList";
-import Editor from "./Editor";
+import Editor from "./features/editor/views/Editor";
 import LoginRegister from "./features/user/views/LoginRegister";
 import Logout from "./features/user/views/Logout";
 import Profile from "./features/profiles/views/Profile";

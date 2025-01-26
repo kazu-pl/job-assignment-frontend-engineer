@@ -6,6 +6,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { store } from "store";
 
+import { applyAuthInterceptor } from "libs/axios/axiosInstance";
+
+applyAuthInterceptor(store);
+
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>

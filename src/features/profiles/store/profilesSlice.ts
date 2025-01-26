@@ -1,5 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "store";
 import { MultipleArticlesResponse, ProfileResponse } from "types/conduit-api.types";
 import { fetchProfile, followProfile, unfollowProfile } from "./profilesSlice.thunks";
 

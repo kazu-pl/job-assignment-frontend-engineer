@@ -1,19 +1,25 @@
-import { Article } from "types/conduit-api.types";
+import { Article, SingleArticleResponse } from "types/conduit-api.types";
 
 export const updateArticlesListOnFavChange = (
-  articlesList: Article[] | undefined,
-  slug: string,
-  type: "+" | "-"
+  stateArticlesList: Article[] | undefined,
+  payloadArticle: Article
 ): void => {
-  const favArticle = articlesList?.find(article => article.slug === slug);
+  if (!stateArticlesList) return;
 
-  if (!favArticle) return;
+  const matchingArticleIndex = stateArticlesList.findIndex(article => article.slug === payloadArticle.slug);
 
-  if (type === "+") {
-    favArticle.favoritesCount += 1;
-    favArticle.favorited = true;
-  } else {
-    favArticle.favoritesCount -= 1;
-    favArticle.favorited = false;
+  if (matchingArticleIndex >= 0) {
+    stateArticlesList[matchingArticleIndex] = payloadArticle;
+  }
+};
+
+export const updateSingleArticleOnFavChange = (
+  SingleArticleResponse: SingleArticleResponse | null,
+  returnedArticle: Article
+): void => {
+  if (!SingleArticleResponse) return;
+
+  if (SingleArticleResponse.article.slug === returnedArticle.slug) {
+    SingleArticleResponse.article = returnedArticle;
   }
 };

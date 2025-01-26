@@ -31,7 +31,7 @@ export default function Article(): JSX.Element {
 
   useEffect(() => {
     if (!profileData && articleData) {
-      dispatch(fetchProfile(articleData?.article.author.username));
+      dispatch(fetchProfile(articleData.article.author.username));
     }
   }, [articleData, dispatch, profileData]);
 

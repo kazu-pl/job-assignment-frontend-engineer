@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { MultipleArticlesResponse, SingleArticleResponse } from "types/conduit-api.types";
-import { updateArticlesListOnFavChange } from "./articlesSlice.utils";
+import { updateArticlesListOnFavChange, updateSingleArticleOnFavChange } from "./articlesSlice.utils";
 import {
   favoriteArticle,
   fetchArticlesList,
@@ -74,17 +74,9 @@ export const articlesSlice = createSlice({
       //
     });
     builder.addCase(favoriteArticle.fulfilled, (state, action) => {
-      // update articles list
-      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article.slug, "+");
-
-      // update single article
-      if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
-        state.singleArticle.data.article.favoritesCount += 1;
-        state.singleArticle.data.article.favorited = true;
-      }
-
-      // update articles written by profile
-      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article.slug, "+");
+      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article);
+      updateSingleArticleOnFavChange(state.singleArticle.data, action.payload.article);
+      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article);
     });
     builder.addCase(favoriteArticle.rejected, () => {
       //
@@ -93,20 +85,9 @@ export const articlesSlice = createSlice({
       //
     });
     builder.addCase(unfavoriteArticle.fulfilled, (state, action) => {
-      // update articles list
-      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article.slug, "-");
-
-      // update single article
-      if (state.singleArticle.data?.article.slug === action.payload.article.slug) {
-        if (state.singleArticle.data.article.favoritesCount > 0) {
-          state.singleArticle.data.article.favoritesCount -= 1;
-        }
-
-        state.singleArticle.data.article.favorited = false;
-      }
-
-      // update articles written by profile
-      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article.slug, "-");
+      updateArticlesListOnFavChange(state.articlesList.data?.articles, action.payload.article);
+      updateSingleArticleOnFavChange(state.singleArticle.data, action.payload.article);
+      updateArticlesListOnFavChange(state.profileArticleList.data?.articles, action.payload.article);
     });
     builder.addCase(unfavoriteArticle.rejected, () => {
       //

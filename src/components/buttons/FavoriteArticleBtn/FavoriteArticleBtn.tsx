@@ -14,24 +14,26 @@ export interface FavoriteArticleBtnProps {
 const FavoriteArticleBtn = ({ article, text, isPulledToTheRight = true }: FavoriteArticleBtnProps): JSX.Element => {
   const dispatch = useAppDispatch();
 
-  const handlefavoriteArticle = async (slug: string) => {
-    try {
-      article.favorited ? dispatch(unfavoriteArticle(slug)) : dispatch(favoriteArticle(slug));
-    } catch (err) {
-      console.log({ err });
-    }
+  const handlefavoriteArticle: React.MouseEventHandler<HTMLButtonElement> = () => {
+    article.favorited ? dispatch(unfavoriteArticle(article.slug)) : dispatch(favoriteArticle(article.slug));
   };
-  //// className for button that should indicate the article / profile is fav:
-  // btn-primary
 
   return (
     <button
-      className={`btn ${article.favorited ? "btn-primary" : "btn-outline-primary"} btn-sm ${
+      className={`btn btn-sm ${article.favorited ? "btn-primary" : "btn-outline-primary"} ${
         isPulledToTheRight ? "pull-xs-right" : ""
       } `}
-      onClick={() => handlefavoriteArticle(article.slug)}
+      onClick={handlefavoriteArticle}
     >
-      <i className="ion-heart" /> {text ? `${text} (${article.favoritesCount})` : article.favoritesCount}
+      {text ? (
+        <>
+          <i className="ion-heart" /> {text} ({article.favoritesCount})
+        </>
+      ) : (
+        <>
+          <i className="ion-heart" /> {article.favoritesCount}
+        </>
+      )}
     </button>
   );
 };

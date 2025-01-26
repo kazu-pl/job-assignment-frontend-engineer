@@ -33,33 +33,33 @@ const Nav = (): JSX.Element => {
           </li>
 
           {!userData && (
-            <li className="nav-item">
-              <Link className="nav-link" to={APP_PATHS.LOGIN}>
-                Sign in
-              </Link>
-            </li>
-          )}
+            <>
+              <li className="nav-item">
+                <Link className="nav-link" to={APP_PATHS.LOGIN}>
+                  Sign in
+                </Link>
+              </li>
 
-          {!userData && (
-            <li className="nav-item">
-              <Link className="nav-link" to={APP_PATHS.REGISTER}>
-                Sign up
-              </Link>
-            </li>
-          )}
-
-          {userData && (
-            <li className="nav-item">
-              <span className="nav-link">Welcome, {userData.user.username}</span>
-            </li>
+              <li className="nav-item">
+                <Link className="nav-link" to={APP_PATHS.REGISTER}>
+                  Sign up
+                </Link>
+              </li>
+            </>
           )}
 
           {userData && (
-            <li className="nav-item">
-              <Link className="nav-link" to={APP_PATHS.LOGOUT}>
-                Logout
-              </Link>
-            </li>
+            <>
+              <li className="nav-item">
+                <span className="nav-link">Welcome, {userData.user.username}</span>
+              </li>
+
+              <li className="nav-item">
+                <Link className="nav-link" to={APP_PATHS.LOGOUT}>
+                  Logout
+                </Link>
+              </li>
+            </>
           )}
         </ul>
       </div>

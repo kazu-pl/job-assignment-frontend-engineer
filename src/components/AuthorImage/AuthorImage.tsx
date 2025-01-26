@@ -5,6 +5,9 @@ export interface AuthorImageProps {
   imageUrl?: string;
   to: string;
   username: string;
+  /**
+   * @example `2025-01-26T14:51:36.346Z`
+   */
   createdAt: string;
 }
 

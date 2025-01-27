@@ -1,13 +1,13 @@
 import { useCallback } from "react";
 import { useAppDispatch } from "store/hooks";
 import { Formik, Form, Field } from "formik";
-import { LoginUserRequest } from "types/conduit-api.types";
+import { LoginUser } from "types/conduit-api.types";
 import { useHistory } from "react-router-dom";
 import APP_PATHS from "constants/appPaths";
 import Nav from "components/Nav";
 import { loginUser } from "features/user/store/userSlice.thunks";
 
-const initialLoginFormValues: LoginUserRequest["user"] = {
+const initialLoginFormValues: LoginUser = {
   email: "",
   password: "",
 };
@@ -17,7 +17,7 @@ export default function LoginRegister(): JSX.Element {
   const history = useHistory();
 
   const handleLoginUserFormik = useCallback(
-    async (values: LoginUserRequest["user"]) => {
+    async (values: LoginUser) => {
       try {
         await dispatch(loginUser({ user: values }));
         history.push(APP_PATHS.ARTICLE_LIST);
